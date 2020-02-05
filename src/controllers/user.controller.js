@@ -1,5 +1,7 @@
 const User = require('../models/user.model')
 const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken");
+const expressjwt = require("express-jwt")
 
 exports.register = function(req,res,next){
     User.findOne({email: req.body.email}, (err, user) => {
@@ -8,7 +10,11 @@ exports.register = function(req,res,next){
             bcrypt.hash(req.body.password, 10, function(err, hash){
                 if (err) {return next(err)}
                 const user = new User(req.body)
-                user.role = ['customer']
+                //role
+                console.log("data: ")
+                console.log(req.body)
+                //user.role = require.body.role
+
                 user.password = hash
                 user.passowrd_confirm = hash
                 user.save(function (err) {
@@ -40,10 +46,24 @@ exports.login = function(req,res){
             if(result === true){
                     //sava user into session
                     req.session.user = user
+
+                    //jwt
+                    const token = jwt.sign({//payload
+                        email: user.email,
+                        username: user.username
+                    }, "mykey" //secretkey
+                    , {expiresIn:"3 hours"} //time expire
+                    )
+                    req.headers['']
+                    //req.head.jwttoken = token
+                    //res.status(200).send({acces_token: token})
+                    
+                    //return
                     return res.json({
                         user : user,
-                        "login" : "success"
-                    })
+                        "login" : "success",
+                        acces_token: token
+                    }) 
             }else{
                 return res.json({err: "user name or password are incorrect"})
             }

@@ -3,8 +3,15 @@ const express = require('express')
 const router = express.Router()
 const {listPost, detailPost, createPost, editPost, deletePost} = require('../controllers/post.controller')
 const {PostValidator, UserValidator} = require('../validators/post.validator')
+const expressjwt = require('express-jwt')
+const { isAdmin } = require('../validators/decentralization')
 
-router.get('/post', requiresLogin, listPost)
+const jwtCheck = expressjwt({  
+    secret: "mykey",
+})
+
+
+router.get('/post', jwtCheck ,requiresLogin, listPost)
 router.get('/post/:id',requiresLogin, detailPost)
 
 //send data to server need validator

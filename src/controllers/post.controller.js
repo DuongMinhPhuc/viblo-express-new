@@ -1,5 +1,6 @@
 const Post = require('../models/post.model')
 
+
 exports.listPost = function(req, res){
     const col = 'title content poster created updated'
     Post.find({}, col, (err, posts) => {

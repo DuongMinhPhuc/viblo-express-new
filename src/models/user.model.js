@@ -5,7 +5,8 @@ const userSchema = new Schema({
     email: {type: String, unique: true, required: false, trim: true},
     username: {type: String, unique: true, required: false, trim:true},
     password: {type: String, required: true, trim: true, minlength: 6},
-    password_confirm: {type: String, required: true, trim: true, minlength: 6}
+    password_confirm: {type: String, required: true, trim: true, minlength: 6},
+    role: {type:String, default:"user", trim:true}
 })
 
 module.exports = mongoose.model('User',userSchema)

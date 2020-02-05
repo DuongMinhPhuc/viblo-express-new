@@ -9,8 +9,14 @@ const mongoose = require('mongoose')
 const session = require('express-session')
 const Mongostore = require('connect-mongo')(session)
 const app = express()
-
+const expressjwt = require("express-jwt")
 const db = mongoose.connection;
+
+const jwtCheck = expressjwt({  
+  secret: "mykey"
+  //secret : process.env.SECRET_KEY
+});
+
 
 dotenv.config()
 
@@ -20,6 +26,8 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology
 db.on('error', (err) => {
     console.log('DB connection error:', err.message);
 })
+app.set('views', './views')
+app.set('view engine', 'pug')
 
 
 app.use(session({
@@ -35,7 +43,6 @@ app.use(morgan("dev"))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(expressValidator())
-
 
 
 app.use('/user',userRoutes)
